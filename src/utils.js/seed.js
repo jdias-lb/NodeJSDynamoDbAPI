@@ -1,4 +1,4 @@
-import { addUserSettings } from "./dynamo.js";
+import { addUserSettings } from "../database/dynamo.js";
 
 const seedData = async () => {
   //get default data from UI or set it up here
