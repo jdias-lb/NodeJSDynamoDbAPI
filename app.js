@@ -8,23 +8,17 @@ const app = express();
 app.use(express.json());
 
 /**
- * @description User settings Service route Controller
+ * @description User settings Service Controller
  * @param ServiceController
  */
-const {
-  getAll,
-  show,
-  create,
-  update,
-  destroy,
-} = require("./service.controller");
+const ServiceController = require("./service.controller");
 
 //Routes
-app.get("/:tableName/:userId/:id", show);
-app.get("/:tableName/:userId", getAll);
-app.post("/:tableName", create);
-app.put("/:tableName/:userId", update);
-app.delete("/:tableName/:id/:userId", destroy);
+app.get("/:tableName/:userId/:id", ServiceController.show);
+app.get("/:tableName/:userId", ServiceController.getAll);
+app.post("/:tableName", ServiceController.create);
+app.put("/:tableName/:userId", ServiceController.update);
+app.delete("/:tableName/:id/:userId", ServiceController.destroy);
 
 //TODP: Server refactor to different file
 const port = process.env.PORT || 3000;
