@@ -23,12 +23,12 @@ const getUserSettings = async (userId, id, tableName) => {
   return Item;
 };
 
-const getAllUserSettings = async (userEmail, tableName) => {
+const getAllUserSettings = async (userId, tableName) => {
   const params = {
     TableName: tableName,
     FilterExpression: "#userId = :userId",
     ExpressionAttributeNames: { "#userId": "userId" },
-    ExpressionAttributeValues: { ":userId": userEmail },
+    ExpressionAttributeValues: { ":userId": userId },
     ReturnConsumedCapacity: "TOTAL",
   };
 

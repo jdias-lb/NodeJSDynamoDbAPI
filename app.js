@@ -1,83 +1,34 @@
+"use strict";
+/**
+ * @description Express Framework for Node.js
+ * @param Router
+ */
 const express = require("express");
-const {
-  getUserSettings,
-  addUserSettings,
-  deleteUserSettings,
-  getAllUserSettings,
-} = require("./dynamo");
-
 const app = express();
 app.use(express.json());
 
-app.get("/usersettings/:tableName/:userId/:id", async (req, res, next) => {
-  try {
-    const { userId, tableName, id } = req.params;
-    const userSettings = await getUserSettings(userId, id, tableName);
-    res.json(userSettings);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send(err);
-  }
-});
+/**
+ * @description User settings Service route Controller
+ * @param ServiceController
+ */
+const {
+  getAll,
+  show,
+  create,
+  update,
+  destroy,
+} = require("./service.controller");
 
-app.get("/usersettings/all/:tableName/:userEmail", async (req, res, next) => {
-  try {
-    const { userEmail, tableName } = req.params;
-    const userSettings = await getAllUserSettings(userEmail, tableName);
-    res.json(userSettings);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send(err);
-  }
-});
+//Routes
+app.get("/:tableName/:userId/:id", show);
+app.get("/:tableName/:userId", getAll);
+app.post("/:tableName", create);
+app.put("/:tableName/:userId", update);
+app.delete("/:tableName/:id/:userId", destroy);
 
-app.post("/usersettings/:tableName", async (req, res) => {
-  const { userSettingsItem, tableName } = req.body;
-  try {
-    await addUserSettings(
-      {
-        ...userSettingsItem,
-        Key: userSettingsItem.userId,
-      },
-      tableName
-    );
-    res.status(201).send("User settings added");
-  } catch (err) {
-    console.error(err);
-    res.status(500).send(err);
-  }
-});
-
-app.put("/usersettings/:tableName/:userId", async (req, res) => {
-  const { userSettingsItem } = req.body;
-  const { userId, tableName } = req.params;
-  userSettingsItem.userId = userId;
-  try {
-    await addUserSettings(userSettingsItem, tableName);
-    res.status(201).send("User settings updated");
-  } catch (err) {
-    console.error(err);
-    res
-      .status(500)
-      .send("Error updating user settings. Please try again later.");
-  }
-});
-
-app.delete("/usersettings/:tableName/:id/:userId", async (req, res) => {
-  const { id, tableName, userId } = req.params;
-  try {
-    await deleteUserSettings(id, tableName, userId);
-    res.status(200).send("User settings deleted");
-  } catch (err) {
-    console.error(err);
-    res
-      .status(500)
-      .send("Error deleting user settings. Please try again later.");
-  }
-});
-
+//TODP: Server refactor to different file
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+  console.log(`app listening at http://localhost:${port}`);
 });
