@@ -1,24 +1,29 @@
 "use strict";
 /**
  * @description Express Framework for Node.js
- * @param Router
  */
 import express from "express";
 const app = express();
 app.use(express.json());
 
 /**
- * @description User settings Service Controller
- * @param ServiceController
+ * @description Routes config class
+ * @param Routes
  */
-import * as ServiceController from "./service.controller.js";
-// const ServiceController = require("./service.controller");
+import { initRoutes } from "./src/route.conf.js";
 
-//Routes
-app.get("/:tableName/:userId/:id", ServiceController.show);
-app.get("/:tableName/:userId", ServiceController.getAll);
-app.post("/:tableName", ServiceController.create);
-app.put("/:tableName/:userId", ServiceController.update);
-app.delete("/:tableName/:id/:userId", ServiceController.destroy);
+/**
+ * @description Configure Routes
+ */
+initRoutes(app);
+
+const port = process.env.PORT || 3000;
+/**
+ * @function startServer
+ * @description Start API Server
+ */
+app.listen(port, () => {
+  console.log(`app listening at http://localhost:${port}`);
+});
 
 export default app;

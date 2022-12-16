@@ -12,7 +12,7 @@ import {
   addUserSettings,
   deleteUserSettings,
   getAllUserSettings,
-} from "./dynamo.js";
+} from "./database/dynamo.js";
 
 async function show(req, res) {
   try {
