@@ -9,14 +9,10 @@ const {
 const app = express();
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
-
-app.get("/usersettings/:userId", async (req, res, next) => {
+app.get("/usersettings/:tableName/:userId/:id", async (req, res, next) => {
   try {
-    const { userId } = req.params;
-    const userSettings = await getUserSettings(userId);
+    const { userId, tableName, id } = req.params;
+    const userSettings = await getUserSettings(userId, id, tableName);
     res.json(userSettings);
   } catch (err) {
     console.error(err);
@@ -24,10 +20,10 @@ app.get("/usersettings/:userId", async (req, res, next) => {
   }
 });
 
-app.get("/usersettings/all/:userEmail", async (req, res, next) => {
+app.get("/usersettings/all/:tableName/:userEmail", async (req, res, next) => {
   try {
-    const { userEmail } = req.params;
-    const userSettings = await getAllUserSettings(userEmail);
+    const { userEmail, tableName } = req.params;
+    const userSettings = await getAllUserSettings(userEmail, tableName);
     res.json(userSettings);
   } catch (err) {
     console.error(err);
@@ -35,13 +31,16 @@ app.get("/usersettings/all/:userEmail", async (req, res, next) => {
   }
 });
 
-app.post("/usersettings", async (req, res) => {
-  const { userSettingsItem } = req.body;
+app.post("/usersettings/:tableName", async (req, res) => {
+  const { userSettingsItem, tableName } = req.body;
   try {
-    await addUserSettings({
-      ...userSettingsItem,
-      Key: userSettingsItem.userId,
-    });
+    await addUserSettings(
+      {
+        ...userSettingsItem,
+        Key: userSettingsItem.userId,
+      },
+      tableName
+    );
     res.status(201).send("User settings added");
   } catch (err) {
     console.error(err);
@@ -49,12 +48,12 @@ app.post("/usersettings", async (req, res) => {
   }
 });
 
-app.put("/usersettings/:userId", async (req, res) => {
+app.put("/usersettings/:tableName/:userId", async (req, res) => {
   const { userSettingsItem } = req.body;
-  const { userId } = req.params;
+  const { userId, tableName } = req.params;
   userSettingsItem.userId = userId;
   try {
-    await addUserSettings(userSettingsItem);
+    await addUserSettings(userSettingsItem, tableName);
     res.status(201).send("User settings updated");
   } catch (err) {
     console.error(err);
@@ -64,10 +63,10 @@ app.put("/usersettings/:userId", async (req, res) => {
   }
 });
 
-app.delete("/usersettings/:id", async (req, res) => {
-  const { id } = req.params;
+app.delete("/usersettings/:tableName/:id/:userId", async (req, res) => {
+  const { id, tableName, userId } = req.params;
   try {
-    await deleteUserSettings(id);
+    await deleteUserSettings(id, tableName, userId);
     res.status(200).send("User settings deleted");
   } catch (err) {
     console.error(err);

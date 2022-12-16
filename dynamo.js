@@ -8,13 +8,14 @@ AWS.config.update({
 });
 
 const dynamoClient = new AWS.DynamoDB.DocumentClient(); //new AWS.DynamoDB({apiVersion: '2012-08-10'});
-const TABLE_NAME = process.env.TABLE_NAME;
+// const TABLE_NAME = process.env.TABLE_NAME;
 
-const getUserSettings = async (userId) => {
+const getUserSettings = async (userId, id, tableName) => {
   const params = {
-    TableName: TABLE_NAME,
+    TableName: tableName,
     Key: {
       userId,
+      id,
     },
   };
   const { Item } = await dynamoClient.get(params).promise();
@@ -22,12 +23,12 @@ const getUserSettings = async (userId) => {
   return Item;
 };
 
-const getAllUserSettings = async (userEmail) => {
+const getAllUserSettings = async (userEmail, tableName) => {
   const params = {
-    TableName: TABLE_NAME,
-    FilterExpression: "#userEmailId = :userEmailId",
-    ExpressionAttributeNames: { "#userEmailId": "userEmailId" },
-    ExpressionAttributeValues: { ":userEmailId": userEmail },
+    TableName: tableName,
+    FilterExpression: "#userId = :userId",
+    ExpressionAttributeNames: { "#userId": "userId" },
+    ExpressionAttributeValues: { ":userId": userEmail },
     ReturnConsumedCapacity: "TOTAL",
   };
 
@@ -36,18 +37,19 @@ const getAllUserSettings = async (userEmail) => {
   return Item;
 };
 
-const addUserSettings = async (userSettingItem) => {
+const addUserSettings = async (userSettingItem, tableName) => {
   const params = {
-    TableName: TABLE_NAME,
+    TableName: tableName,
     Item: userSettingItem,
   };
   return await dynamoClient.put(params).promise();
 };
 
-const deleteUserSettings = async (userId) => {
+const deleteUserSettings = async (id, tableName, userId) => {
   const params = {
-    TableName: TABLE_NAME,
+    TableName: tableName,
     Key: {
+      id,
       userId,
     },
   };
