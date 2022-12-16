@@ -7,13 +7,12 @@
  */
 
 // Setup Models and import them here
-
-const {
+import {
   getUserSettings,
   addUserSettings,
   deleteUserSettings,
   getAllUserSettings,
-} = require("./dynamo");
+} from "./dynamo.js";
 
 async function show(req, res) {
   try {
@@ -83,4 +82,4 @@ async function destroy(req, res) {
   }
 }
 
-module.exports = { getAll, show, create, update, destroy };
+export { getAll, show, create, update, destroy };

@@ -1,5 +1,6 @@
-const AWS = require("aws-sdk");
-require("dotenv").config();
+import AWS from "aws-sdk";
+import dotenv from "dotenv";
+dotenv.config();
 
 AWS.config.update({
   region: process.env.AWS_DEFAULT_REGION,
@@ -61,7 +62,7 @@ const deleteUserSettings = async (id, tableName, userId) => {
 // deleteUserSettings("123");
 // getAllUserSettings("lbx");
 
-module.exports = {
+export {
   getUserSettings,
   addUserSettings,
   deleteUserSettings,

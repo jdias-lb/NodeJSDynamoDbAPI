@@ -1,4 +1,4 @@
-const { addUserSettings } = require("./dynamo");
+import { addUserSettings } from "./dynamo.js";
 
 const seedData = async () => {
   //get default data from UI or set it up here
@@ -119,4 +119,4 @@ const seedData = async () => {
   }
 };
 
-// seedData();
+seedData();
