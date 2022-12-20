@@ -6,7 +6,6 @@
  * DELETE  /api/service/:tableName/:id                  ->  destroy
  */
 
-// Setup Models and import them here
 import {
   getUserSettings,
   addUserSettings,
@@ -19,6 +18,12 @@ import {
   respondWithResult,
 } from "./utils/common.js";
 
+/**
+ * @function show
+ * @description Function that returns single usersetting by userId, id provided in url
+ * @param {Object} req - Express Framework Request Object
+ * @param {Object} res - Express Framework Response Object
+ */
 async function show(req, res) {
   const { userId, tableName, id } = req.params;
   return await getUserSettings(userId, id, tableName)
@@ -27,6 +32,12 @@ async function show(req, res) {
     .catch(handleError(res));
 }
 
+/**
+ * @function getAll
+ * @description Function that returns all Application specific user settings by userId provided in url
+ * @param {Object} req - Express Framework Request Object
+ * @param {Object} res - Express Framework Response Object
+ */
 async function getAll(req, res) {
   const { userId, tableName } = req.params;
   return await getAllUserSettings(userId, tableName)
@@ -35,6 +46,12 @@ async function getAll(req, res) {
     .catch(handleError(res));
 }
 
+/**
+ * @function create
+ * @description Function that create usersetting by provided request body
+ * @param {Object} req - Express Framework Request Object
+ * @param {Object} res - Express Framework Response Object
+ */
 async function create(req, res) {
   const { tableName } = req.params;
   const { userSettingsItem } = req.body;
@@ -46,6 +63,12 @@ async function create(req, res) {
   }
 }
 
+/**
+ * @function update
+ * @description Function that update usersetting by provided id in url and updated data in request body
+ * @param {Object} req - Express Framework Request Object
+ * @param {Object} res - Express Framework Response Object
+ */
 async function update(req, res) {
   const { userSettingsItem } = req.body;
   const { userId, tableName } = req.params;
@@ -58,6 +81,12 @@ async function update(req, res) {
   }
 }
 
+/**
+ * @function destroy
+ * @description Function that delete usersetting by userId, id provided in url
+ * @param {Object} req - Express Framework Request Object
+ * @param {Object} res - Express Framework Response Object
+ */
 async function destroy(req, res) {
   const { id, userId, tableName } = req.params;
   try {
