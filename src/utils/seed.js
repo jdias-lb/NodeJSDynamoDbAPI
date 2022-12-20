@@ -6,19 +6,27 @@ const seedData = async () => {
   const gloablSettings = [
     {
       userId: "user1@lbx.com",
+      id: "globalsetting1",
+      notifications: "disabled",
       theme: "dark",
     },
     {
       userId: "user2@lbx.com",
+      id: "globalsetting2",
+      notifications: "disabled",
       theme: "light",
     },
     {
       userId: "user1@lbx.com",
+      id: "globalsetting3",
       notifications: "enabled",
+      theme: "dark",
     },
     {
       userId: "user2@lbx.com",
+      id: "globalsetting4",
       notifications: "disabled",
+      theme: "dark",
     },
   ];
   const columns = [
@@ -27,6 +35,7 @@ const seedData = async () => {
       field: "PROPERTY",
       show: true,
       userId: "user1@lbx.com",
+      id: "historicalDataColumn1",
       application_name: "CE",
     },
     {
@@ -34,6 +43,7 @@ const seedData = async () => {
       field: "OCCUPANT",
       show: true,
       userId: "user1@lbx.com",
+      id: "historicalDataColumn2",
       application_name: "CE",
     },
     {
@@ -41,6 +51,7 @@ const seedData = async () => {
       field: "STREET_ADDRESS",
       show: true,
       userId: "user1@lbx.com",
+      id: "historicalDataColumn3",
       application_name: "CE",
     },
     {
@@ -48,6 +59,7 @@ const seedData = async () => {
       field: "CITY",
       show: true,
       userId: "user1@lbx.com",
+      id: "historicalDataColumn4",
       application_name: "CE",
     },
     {
@@ -55,6 +67,7 @@ const seedData = async () => {
       field: "DATABASE_ACRONYM",
       show: true,
       userId: "user1@lbx.com",
+      id: "historicalDataColumn5",
       application_name: "CE",
     },
     {
@@ -62,6 +75,7 @@ const seedData = async () => {
       field: "DATABASE_ID",
       show: true,
       userId: "user1@lbx.com",
+      id: "historicalDataColumn6",
       application_name: "CE",
     },
     {
@@ -69,6 +83,7 @@ const seedData = async () => {
       field: "EDR_ID",
       show: true,
       userId: "user1@lbx.com",
+      id: "historicalDataColumn7",
       application_name: "CE",
     },
     {
@@ -76,6 +91,7 @@ const seedData = async () => {
       field: "ELEVATION",
       show: true,
       userId: "user1@lbx.com",
+      id: "historicalDataColumn8",
       application_name: "CE",
     },
     {
@@ -83,6 +99,7 @@ const seedData = async () => {
       field: "DISTANCE_MI",
       show: true,
       userId: "user1@lbx.com",
+      id: "historicalDataColumn9",
       application_name: "CE",
     },
     {
@@ -90,6 +107,7 @@ const seedData = async () => {
       field: "COMMENTS",
       show: true,
       userId: "user1@lbx.com",
+      id: "historicalDataColumn10",
       application_name: "CE",
     },
     {
@@ -97,6 +115,7 @@ const seedData = async () => {
       field: "NOTABLE",
       show: true,
       userId: "user2@lbx.com",
+      id: "historicalDataColumn11",
       application_name: "CE",
     },
     {
@@ -104,16 +123,17 @@ const seedData = async () => {
       field: "SOURCE",
       show: true,
       userId: "user2@lbx.com",
+      id: "historicalDataColumn12",
       application_name: "CE",
     },
   ];
 
   try {
     //batch add columns
-    const promises = gloablSettings.map(async (column, i) => {
-      addUserSettings({ ...column, id: i + "" }, "GlobalSettings");
+    const promises = columns.map(async (column, i) => {
+      addUserSettings({ ...column }, "HistoricalResearch");
     });
-    await Promise.all(promises);
+    Promise.all(promises);
   } catch (err) {
     console.log(err);
   }

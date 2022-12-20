@@ -16,6 +16,6 @@ router.get("/:tableName/:userId/:id", ServiceController.show);
 router.get("/:tableName/:userId", ServiceController.getAll);
 router.post("/:tableName", ServiceController.create);
 router.put("/:tableName/:userId", ServiceController.update);
-router.delete("/:tableName/:id/:userId", ServiceController.destroy);
+router.delete("/:tableName/:userId/:id", ServiceController.destroy);
 
 export default router;

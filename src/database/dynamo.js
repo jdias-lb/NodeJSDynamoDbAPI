@@ -8,8 +8,7 @@ AWS.config.update({
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 });
 
-const dynamoClient = new AWS.DynamoDB.DocumentClient(); //new AWS.DynamoDB({apiVersion: '2012-08-10'});
-// const TABLE_NAME = process.env.TABLE_NAME;
+const dynamoClient = new AWS.DynamoDB.DocumentClient();
 
 const getUserSettings = async (userId, id, tableName) => {
   const params = {
@@ -20,21 +19,22 @@ const getUserSettings = async (userId, id, tableName) => {
     },
   };
   const { Item } = await dynamoClient.get(params).promise();
-  console.log(Item);
   return Item;
 };
 
 const getAllUserSettings = async (userId, tableName) => {
   const params = {
     TableName: tableName,
-    FilterExpression: "#userId = :userId",
     ExpressionAttributeNames: { "#userId": "userId" },
     ExpressionAttributeValues: { ":userId": userId },
-    ReturnConsumedCapacity: "TOTAL",
+    KeyConditionExpression: "#userId = :userId",
   };
 
-  const Item = await dynamoClient.scan(params).promise();
-  console.log(Item);
+  /* Our schema sets userId as Key and id as SortKey, to partition the data in a way that its most read friendly
+  To perform dynamoClient.get we have to provide both key and sort key which by nature prevents getting multiple items.
+  Alternatively using scan and filtering table by userId is inefficent and performs scan on all table items.
+  Using query we can get all items just by userId (and omit sort key) while only scanning the required items. */
+  const Item = await dynamoClient.query(params).promise();
   return Item;
 };
 
@@ -46,7 +46,7 @@ const addUserSettings = async (userSettingItem, tableName) => {
   return await dynamoClient.put(params).promise();
 };
 
-const deleteUserSettings = async (id, tableName, userId) => {
+const deleteUserSettings = async (id, userId, tableName) => {
   const params = {
     TableName: tableName,
     Key: {
@@ -56,11 +56,6 @@ const deleteUserSettings = async (id, tableName, userId) => {
   };
   return await dynamoClient.delete(params).promise();
 };
-
-// addUserSettings("123", "");
-// getUserSettings("1");
-// deleteUserSettings("123");
-// getAllUserSettings("lbx");
 
 export {
   getUserSettings,

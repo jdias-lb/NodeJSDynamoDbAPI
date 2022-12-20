@@ -13,43 +13,35 @@ import {
   deleteUserSettings,
   getAllUserSettings,
 } from "./database/dynamo.js";
+import {
+  handleEntityNotFound,
+  handleError,
+  respondWithResult,
+} from "./utils/common.js";
 
 async function show(req, res) {
-  try {
-    const { userId, tableName, id } = req.params;
-    const userSettings = await getUserSettings(userId, id, tableName);
-    res.json(userSettings);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send(err);
-  }
+  const { userId, tableName, id } = req.params;
+  return await getUserSettings(userId, id, tableName)
+    .then(handleEntityNotFound(res))
+    .then(respondWithResult(res))
+    .catch(handleError(res));
 }
 
 async function getAll(req, res) {
-  try {
-    const { userId, tableName } = req.params;
-    const userSettings = await getAllUserSettings(userId, tableName);
-    res.json(userSettings);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send(err);
-  }
+  const { userId, tableName } = req.params;
+  return await getAllUserSettings(userId, tableName)
+    .then(handleEntityNotFound(res))
+    .then(respondWithResult(res))
+    .catch(handleError(res));
 }
 
 async function create(req, res) {
   const { tableName } = req.params;
   const { userSettingsItem } = req.body;
   try {
-    await addUserSettings(
-      {
-        ...userSettingsItem,
-        Key: userSettingsItem.userId,
-      },
-      tableName
-    );
+    await addUserSettings(userSettingsItem, tableName);
     res.status(201).send("User settings added");
   } catch (err) {
-    console.error(err);
     res.status(500).send(err);
   }
 }
@@ -60,25 +52,20 @@ async function update(req, res) {
   userSettingsItem.userId = userId;
   try {
     await addUserSettings(userSettingsItem, tableName);
-    res.status(201).send("User settings updated");
+    res.status(204).send("User settings updated");
   } catch (err) {
-    console.error(err);
-    res
-      .status(500)
-      .send("Error updating user settings. Please try again later.");
+    res.status(500).send(err);
   }
 }
 
 async function destroy(req, res) {
-  const { id, tableName, userId } = req.params;
+  const { id, userId, tableName } = req.params;
   try {
-    await deleteUserSettings(id, tableName, userId);
+    await deleteUserSettings(id, userId, tableName);
     res.status(200).send("User settings deleted");
   } catch (err) {
     console.error(err);
-    res
-      .status(500)
-      .send("Error deleting user settings. Please try again later.");
+    res.status(500).send(err);
   }
 }
 
