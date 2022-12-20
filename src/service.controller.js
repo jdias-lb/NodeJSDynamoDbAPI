@@ -11,12 +11,12 @@ import {
   addUserSettings,
   deleteUserSettings,
   getAllUserSettings,
-} from "./database/dynamo.js";
+} from "./dynamo.js";
 import {
   handleEntityNotFound,
   handleError,
   respondWithResult,
-} from "./utils/common.js";
+} from "./utils.js";
 
 /**
  * @function show
